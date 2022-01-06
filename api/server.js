@@ -58,5 +58,47 @@ server.get('/api/users/:id', async (request, response) => {
     }    
 })
 
+// [ PUT ] Update a user
+server.put('/api/users/:id', async (request, response) => {
+    const { id } = request.params
+    const { body } = request
+    try {
+        const updated = await Users.update(id, body)
+        if (!updated) {
+            response.status(404).json({
+                message: `user by id ${id} does not exsist` 
+            })
+        } else {
+            response.json(updated)
+        }
+    } catch (error) {
+        response.status(500).json({
+            message: 'error updating exsisting user',
+            error: error.message,
+        })        
+    }
+})
+
+// [ DELETE ] a user
+server.delete('/api/users/:id', async (request, response) => {
+    const { id } = request.params
+    try {
+        const deletedUser = await Users.remove(id)
+        if (!deletedUser) {
+            response.status(404).json({
+                message: `user by id ${id} does not exsist` 
+            })
+        } else {
+            response.json(deletedUser)
+        }
+    } catch (error) {
+        response.status(500).json({
+            message: `error deleting user with id:${id}`,
+            error: error.message,
+        }) 
+    }
+
+})
+
 
 module.exports = server 
