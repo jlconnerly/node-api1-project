@@ -39,5 +39,24 @@ server.get('/api/users', async (request, response) => {
     }
 })
 
+// [ GET ] a Single User
+server.get('/api/users/:id', async (request, response) => {
+    try {
+        if (!request.params.id) {
+            response.status(400).json({
+                message: `No user found for id:${request.params.id}`
+             })            
+        } else {
+            const user = await Users.findById(request.params.id)
+            response.json(user)
+        }
+    } catch (error) {
+        response.status(500).json({
+            message: "Unable to fetch all Users",
+            error: error.message
+        })
+    }    
+})
+
 
 module.exports = server 
